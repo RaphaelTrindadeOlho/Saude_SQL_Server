@@ -12,6 +12,14 @@ CONSTRAINT PK_ID_PESSOA PRIMARY KEY (PES_INT_ID),
 CONSTRAINT UK_CPF_PESSOA UNIQUE(PES_STR_CPF)
 );
 
+INSERT INTO PESSOA (PES_STR_NOME, PES_DATE_DATANASC, PES_STR_SEXO, PES_STR_CPF)
+VALUES 
+    ('Raphael', '2005-11-19', 'M', '19945321412'),
+    ('Ana Clara', '1998-07-15', 'F', '12345678901'),
+    ('Carlos Eduardo', '1985-03-22', 'M', '98765432100'),
+    ('Fernanda Silva', '2000-12-30', 'F', '45678912302'),
+    ('Mariana Gomes', '1992-09-10', 'F', '32165498703');
+
 
 CREATE TABLE PACIENTE (
 PAC_INT_ID INT IDENTITY(1,1),
@@ -21,6 +29,14 @@ PAC_STR_COMORBIDADE VARCHAR (100) NOT NULL,
 PAC_STR_ALERGIA VARCHAR (100) NOT NULL,
 CONSTRAINT PK_PAC_ID PRIMARY KEY (PAC_INT_ID)
 );
+
+INSERT INTO PACIENTE (PAC_INT_ID, PAC_DATE_DATAREGISTRO, PAC_STR_CONVENIO, PAC_STR_COMORBIDADE, PAC_STR_ALERGIA)
+VALUES
+('2024-11-17', 'Unimed', 'Hipertensão', 'Nenhuma'),
+('2024-11-16', 'Amil', 'Diabetes', 'Lactose'),
+('2024-11-15', 'SulAmérica', 'Asma', 'Poeira'),
+('2024-11-14', 'Bradesco Saúde', 'Nenhuma', 'Amendoim'),
+('2024-11-13', 'Hapvida', 'Obesidade', 'Glúten');
 
 ALTER TABLE PACIENTE
 ADD PES_INT_ID INT;
@@ -39,6 +55,14 @@ DOU_STR_ESPECIALIDADE VARCHAR (100) NOT NULL,
 DOU_STR_HOSPITAIS VARCHAR (100) NOT NULL,
 CONSTRAINT UK_DOUTOR_CRM UNIQUE (DOU_STR_CRM)
 );
+INSERT INTO DOUTOR (DOU_STR_CRM, DOU_STR_ESPECIALIDADE, DOU_STR_HOSPITAIS)
+VALUES 
+('1234SP', 'Cardiovascular', 'Albert Einstein'),
+('5678RJ', 'Pediatria', 'Hospital São José'),
+('9101MG', 'Dermatologia', 'Hospital Santa Maria'),
+('1213BA', 'Neurologia', 'Hospital das Clínicas'),
+('1415PR', 'Ortopedia', 'Hospital do Trabalhador');
+
 
 ALTER TABLE DOUTOR
 ADD CONSTRAINT PK_DOU_ID PRIMARY KEY (DOU_INT_ID);
@@ -66,6 +90,15 @@ CONSTRAINT FK_CONSULTA_PACIENTE FOREIGN KEY (PAC_INT_ID) REFERENCES PACIENTE (PA
 CONSTRAINT FK_CONSULTA_DOUTOR FOREIGN KEY (DOU_INT_ID) REFERENCES DOUTOR (DOU_INT_ID)
 );
 
+INSERT INTO CONSULTA (CON_DATEH_DATAHORA, CON_STR_SINTOMAS, CON_STR_DIAGNOSTICO, CON_STR_OBSERVAÇÕES)
+VALUES 
+('2024-11-17 10:30:00', 'Febre alta e dor de cabeça', 'Infecção viral', 'Paciente deve retornar em 7 dias'),
+('2024-11-18 15:00:00', 'Tosse persistente e dor no peito', 'Bronquite', 'Recomendada inalação e repouso'),
+('2024-11-19 09:00:00', 'Dores musculares e fadiga', 'Dengue', 'Hidratação constante e evitar esforço físico'),
+('2024-11-20 14:30:00', 'Irritação na pele e coceira', 'Alergia alimentar', 'Evitar alimentos com glúten por 1 semana'),
+('2024-11-21 11:00:00', 'Tontura e náusea', 'Vertigem posicional', 'Orientado a evitar movimentos bruscos');
+
+
 ALTER TABLE CONSULTA
 ADD CONSTRAINT PK_CON_ID PRIMARY KEY (CON_INT_ID)
 
@@ -80,6 +113,16 @@ CONSTRAINT PK_REC_ID PRIMARY KEY (REC_INT_ID),
 CONSTRAINT UK_RECEITA_CON_INT_ID UNIQUE (CON_INT_ID),
 CONSTRAINT FK_RECEITA_CONSULTA FOREIGN KEY (CON_INT_ID) REFERENCES CONSULTA(CON_INT_ID)
 );
+
+INSERT INTO RECEITA (REC_STR_POSOLOGIA, REC_DATE_DATA, REC_DATE_VALIDADE, REC_STR_OBSERVAÇÕES, CON_INT_ID)
+VALUES 
+('Tomar 1 comprimido após o café da manhã durante 7 dias', '2024-11-17', '2024-11-24', 'Evitar uso em jejum', 1),
+('Aplicar pomada duas vezes ao dia na área afetada', '2024-11-18', '2024-12-01', 'Não expor ao sol após aplicação', 2),
+('Ingerir 500ml de água com eletrólitos a cada 3 horas', '2024-11-19', '2024-11-26', 'Manter repouso durante o tratamento', 3),
+('Tomar 10 gotas do medicamento em água a cada 8 horas', '2024-11-20', '2024-11-30', 'Ajustar dose em caso de tontura', 4),
+('Utilizar spray nasal 3 vezes ao dia', '2024-11-21', '2024-11-28', 'Não usar por mais de 7 dias consecutivos', 5);
+
+
 
 CREATE TABLE RECEITA_MEDICAMENTO (
 REC_INT_ID INT,
@@ -98,3 +141,11 @@ MED_DOU_PRECO FLOAT NOT NULL,
 MED_STR_FABRICANTE VARCHAR (200) NOT NULL
 CONSTRAINT PK_MED_ID PRIMARY KEY (MED_INT_ID)
 );
+
+INSERT INTO MEDICAMENTO (MED_STR_NOME, MED_STR_PRINCATIVO, MED_DOU_DOSAGEM, MED_DOU_PRECO, MED_STR_FABRICANTE)
+VALUES 
+('Paracetamol', 'Paracetamol', 500.0, 12.50, 'MedPharma Inc.'),
+('Ibuprofeno', 'Ibuprofeno', 200.0, 8.90, 'PharmaLife Ltda.'),
+('Amoxicilina', 'Amoxicilina Tri-Hidratada', 250.0, 18.75, 'BioMedic Labs'),
+('Dipirona', 'Metamizol Sódico', 500.0, 5.60, 'HealthCare Solutions'),
+('Omeprazol', 'Omeprazol Magnésio', 20.0, 15.40, 'Gastros Pharma');
